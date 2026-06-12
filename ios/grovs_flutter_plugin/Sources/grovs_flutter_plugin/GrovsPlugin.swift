@@ -51,7 +51,16 @@ public class GrovsPlugin: NSObject, FlutterPlugin {
     public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [AnyHashable : Any] = [:]) -> Bool {
         // Read API key and test environment flag from Info.plist
         if let infoDictionary = Bundle.main.infoDictionary, let apiKey = infoDictionary["GrovsApiKey"] as? String {
-            let useTestEnvironment = infoDictionary["GrovsUseTestEnvironment"] as? Bool ?? false
+            // Accept either a Bool (<true/>) or a String ("true"/"false") so the flag can be
+            // driven by per-flavor xcconfig variables, which can only inject strings.
+            let useTestEnvironment: Bool
+            if let boolValue = infoDictionary["GrovsUseTestEnvironment"] as? Bool {
+                useTestEnvironment = boolValue
+            } else if let stringValue = infoDictionary["GrovsUseTestEnvironment"] as? String {
+                useTestEnvironment = (stringValue as NSString).boolValue
+            } else {
+                useTestEnvironment = false
+            }
             let baseURL = infoDictionary["GrovsBaseURL"] as? String
             Grovs.configure(APIKey: apiKey, useTestEnvironment: useTestEnvironment, baseURL: baseURL, delegate: self)
         }
