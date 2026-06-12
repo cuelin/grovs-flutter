@@ -13,7 +13,12 @@ A new Flutter plugin project.
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
+  # Shared source location with Swift Package Manager (Package.swift). Keeps both
+  # CocoaPods and SPM building from the same files.
+  s.source_files = 'grovs_flutter_plugin/Sources/grovs_flutter_plugin/**/*.swift'
+  s.resource_bundles = {
+    'grovs_flutter_plugin_privacy' => ['grovs_flutter_plugin/Sources/grovs_flutter_plugin/PrivacyInfo.xcprivacy'],
+  }
   s.dependency 'Flutter'
   s.dependency 'Grovs', '~> 2.3'
   s.platform = :ios, '13.0'
